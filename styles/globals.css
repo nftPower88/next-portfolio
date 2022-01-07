@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .row {
+    @apply h-8;
+  }
+
+  .cell {
+    @apply h-8 w-8 inline-block outline outline-1 outline-gray-400;
+  }
+
+  .cell-green {
+    @apply bg-green-600;
+  }
+
+  .cell-red {
+    @apply bg-red-600;
+  }
+}
