@@ -1,9 +1,9 @@
 import ContainerBlock from '../components/ContainerBlock'
 import FavouriteProjects from '../components/FavouriteProjects'
 import Hero from '../components/Hero'
-import Snake from '../components/Snake'
+import PlaySnake from '../components/PlaySnake'
 
-export default function Home({ scores }) {
+export default function Home() {
   return (
     <ContainerBlock
       title='Manu Arora - Developer, Writer, Creator'
@@ -11,21 +11,7 @@ export default function Home({ scores }) {
     >
       <Hero />
       <FavouriteProjects />
-      <Snake scores={scores} />
+      <PlaySnake />
     </ContainerBlock>
   )
-}
-
-export async function getServerSideProps(context) {
-  const res = await fetch(`http://localhost:3000/api/score`)
-  const json = await res.json()
-
-  let scores = []
-  if (json.success) {
-    scores = json.data
-  }
-
-  return {
-    props: { scores },
-  }
 }

@@ -1,10 +1,17 @@
-export const BOARD_SIZE = 15
-export const MIN_SNAKE_SPEED = 2147483647
-export const DEFAULT_SNAKE_SPEED = 200
+const CANVAS_SIZE = [500, 500]
+const SNAKE_START = [
+  [8, 7],
+  [8, 8],
+]
 
-export const Direction = {
-  UP: 'UP',
-  RIGHT: 'RIGHT',
-  DOWN: 'DOWN',
-  LEFT: 'LEFT',
+const APPLE_START = [8, 3]
+const SCALE = 25
+const SPEED = 200
+const DIRECTIONS = {
+  38: [0, -1], // up
+  40: [0, 1], // down
+  37: [-1, 0], // left
+  39: [1, 0], // right
 }
+
+export { CANVAS_SIZE, SNAKE_START, APPLE_START, SCALE, SPEED, DIRECTIONS }

@@ -6,7 +6,7 @@ export default function FavouriteProjects() {
     <div className='bg-[#e7e7e7] lg:-mt-40'>
       <div className='max-w-6xl mx-auto'>
         <header className='flex flex-col md:flex-row justify-between items-center lg:pt-40 mx-10 lg:my-0'>
-          <h1 className='text-6xl lg:text-9xl max-w-lg font-bold text-gray-600 my-20 md:my-0 md:text-whit text-center'>
+          <h1 className='text-6xl lg:text-9xl max-w-lg font-bold text-gray-600 my-20 md:mb-12 md:mt-0 md:text-whit text-center'>
             Favourite Projects
           </h1>
           <Link href='/projects'>

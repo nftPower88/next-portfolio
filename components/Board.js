@@ -1,196 +1,128 @@
-import React, { useEffect, useState } from 'react'
-import { LinkedListNode, LinkedList } from '../models/LinkedList'
-import { randomIntFromInterval } from '../utils/randomIntFromInterval'
+import React, { useState, useRef, useEffect } from 'react'
+import { useSnake } from '../context/SnakeContext'
 import { useInterval } from '../hooks/useInterval'
 import {
-  BOARD_SIZE,
-  MIN_SNAKE_SPEED,
-  DEFAULT_SNAKE_SPEED,
-  Direction,
+  CANVAS_SIZE,
+  SNAKE_START,
+  APPLE_START,
+  SCALE,
+  SPEED,
+  DIRECTIONS,
 } from '../constants/snake'
-import {
-  getStartingSnakeLLValue,
-  createBoard,
-  getCoordsInDirection,
-  isOutOfBounds,
-  getDirectionFromKey,
-  getGrowthNodeCoords,
-  getOppositeDirection,
-  getCellClassName,
-} from '../utils/snakeBoardUtils'
-import ScoreTable from './ScoreTable'
 
-export default function Board({ scores }) {
-  const [name, setName] = useState('')
-  const [company, setCompany] = useState('')
-  const [score, setScore] = useState(0)
-  const [board, setBoard] = useState(createBoard(BOARD_SIZE))
-  const [snake, setSnake] = useState(
-    new LinkedList(getStartingSnakeLLValue(board))
-  )
-  const [snakeCells, setSnakeCells] = useState(new Set([snake.head.value.cell]))
-  const [foodCell, setFoodCell] = useState(snake.head.value.cell + 5)
-  const [direction, setDirection] = useState(Direction.RIGHT)
-  const [snakeSpeed, setSnakeSpeed] = useState(MIN_SNAKE_SPEED)
+export default function Board() {
+  const { score, setScore, addScore } = useSnake()
+
+  const canvasRef = useRef()
+  const [snake, setSnake] = useState(SNAKE_START)
+  const [apple, setApple] = useState(APPLE_START)
+  const [dir, setDir] = useState([0, -1])
+  const [speed, setSpeed] = useState(null)
+  const [gameOver, setGameOver] = useState(false)
+
+  useInterval(() => gameLoop(), speed)
+
+  const endGame = () => {
+    setSpeed(null)
+    setGameOver(true)
+    addScore()
+  }
+
+  const moveSnake = ({ keyCode }) =>
+    keyCode >= 37 && keyCode <= 40 && setDir(DIRECTIONS[keyCode])
+
+  const createApple = () =>
+    apple.map((_a, i) => Math.floor(Math.random() * (CANVAS_SIZE[i] / SCALE)))
+
+  const checkCollision = (piece, snk = snake) => {
+    if (
+      piece[0] * SCALE >= CANVAS_SIZE[0] ||
+      piece[0] < 0 ||
+      piece[1] * SCALE >= CANVAS_SIZE[1] ||
+      piece[1] < 0
+    )
+      return true
+
+    for (const segment of snk) {
+      if (piece[0] === segment[0] && piece[1] === segment[1]) return true
+    }
+    return false
+  }
+
+  const checkAppleCollision = (newSnake) => {
+    if (newSnake[0][0] === apple[0] && newSnake[0][1] === apple[1]) {
+      let newApple = createApple()
+      while (checkCollision(newApple, newSnake)) {
+        newApple = createApple()
+      }
+      setApple(newApple)
+      return true
+    }
+    return false
+  }
+
+  const gameLoop = () => {
+    const snakeCopy = JSON.parse(JSON.stringify(snake))
+    const newSnakeHead = [snakeCopy[0][0] + dir[0], snakeCopy[0][1] + dir[1]]
+    snakeCopy.unshift(newSnakeHead)
+    if (checkCollision(newSnakeHead)) endGame()
+    if (!checkAppleCollision(snakeCopy)) snakeCopy.pop()
+    if (checkAppleCollision(snakeCopy)) setScore(score + 1)
+    setSnake(snakeCopy)
+  }
+
+  const startGame = () => {
+    setScore(0)
+    setSnake(SNAKE_START)
+    setApple(APPLE_START)
+    setDir([0, -1])
+    setSpeed(SPEED)
+    setGameOver(false)
+  }
 
   useEffect(() => {
     window.addEventListener('keydown', (e) => {
-      handleKeydown(e)
+      e.preventDefault()
+      moveSnake(e)
     })
   }, [])
 
-  useInterval(() => {
-    moveSnake()
-  }, snakeSpeed)
-
-  function handleKeydown(e) {
-    const newDirection = getDirectionFromKey(e.key)
-    const isValidDirection = newDirection !== ''
-    if (!isValidDirection) return
-    const snakeWillRunIntoItself =
-      getOppositeDirection(newDirection) === direction && snakeCells.size > 1
-    if (snakeWillRunIntoItself) return
-    setDirection(newDirection)
-  }
-
-  function moveSnake() {
-    const currentHeadCoords = {
-      row: snake.head.value.row,
-      col: snake.head.value.col,
-    }
-
-    const nextHeadCoords = getCoordsInDirection(currentHeadCoords, direction)
-    if (isOutOfBounds(nextHeadCoords, board)) {
-      handleGameOver()
-      return
-    }
-    const nextHeadCell = board[nextHeadCoords.row][nextHeadCoords.col]
-    if (snakeCells.has(nextHeadCell)) {
-      handleGameOver()
-      return
-    }
-
-    const newHead = new LinkedListNode({
-      row: nextHeadCoords.row,
-      col: nextHeadCoords.col,
-      cell: nextHeadCell,
-    })
-    const currentHead = snake.head
-    snake.head = newHead
-    currentHead.next = newHead
-
-    const newSnakeCells = new Set(snakeCells)
-    newSnakeCells.delete(snake.tail.value.cell)
-    newSnakeCells.add(nextHeadCell)
-
-    snake.tail = snake.tail.next
-    if (snake.tail === null) snake.tail = snake.head
-
-    const foodConsumed = nextHeadCell === foodCell
-    if (foodConsumed) {
-      growSnake(newSnakeCells)
-      handleFoodConsumption(newSnakeCells)
-    }
-
-    setSnakeCells(newSnakeCells)
-  }
-
-  function growSnake(newSnakeCells) {
-    const growthNodeCoords = getGrowthNodeCoords(snake.tail, direction)
-    if (isOutOfBounds(growthNodeCoords, board)) {
-      return
-    }
-    const newTailCell = board[growthNodeCoords.row][growthNodeCoords.col]
-    const newTail = new LinkedListNode({
-      row: growthNodeCoords.row,
-      col: growthNodeCoords.col,
-      cell: newTailCell,
-    })
-    const currentTail = snake.tail
-    snake.tail = newTail
-    snake.tail.next = currentTail
-
-    newSnakeCells.add(newTailCell)
-  }
-
-  function handleFoodConsumption(newSnakeCells) {
-    const maxPossibleCellValue = BOARD_SIZE * BOARD_SIZE
-    let nextFoodCell
-
-    while (true) {
-      nextFoodCell = randomIntFromInterval(1, maxPossibleCellValue)
-      if (newSnakeCells.has(nextFoodCell) || foodCell === nextFoodCell) continue
-      break
-    }
-
-    setFoodCell(nextFoodCell)
-    setScore(score + 1)
-  }
-
-  function handleGameOver() {
-    setScore(0)
-    const snakeLLStartingValue = getStartingSnakeLLValue(board)
-    setSnake(new LinkedList(snakeLLStartingValue))
-    setFoodCell(snakeLLStartingValue.cell + 5)
-    setSnakeCells(new Set([snakeLLStartingValue.cell]))
-    setDirection(Direction.RIGHT)
-  }
-
-  function handleStartOrPauseGame() {
-    snakeSpeed === MIN_SNAKE_SPEED
-      ? setSnakeSpeed(DEFAULT_SNAKE_SPEED)
-      : setSnakeSpeed(MIN_SNAKE_SPEED)
-  }
+  useEffect(() => {
+    const context = canvasRef.current.getContext('2d')
+    context.setTransform(SCALE, 0, 0, SCALE, 0, 0)
+    context.clearRect(0, 0, window.innerWidth, window.innerHeight)
+    context.fillStyle = 'LightPink'
+    snake.forEach(([x, y]) => context.fillRect(x, y, 1, 1))
+    context.fillStyle = 'LightGreen'
+    context.fillRect(apple[0], apple[1], 1, 1)
+  }, [snake, apple, gameOver])
 
   return (
-    <div className='bg-white flex p-10 -mt-5'>
-      <div className='w-1/2 '>
-        <div className='flex flex-row items-start justify-between'>
-          <button className='px-8 py-4 mx-2 rounded-md bg-green-400 shadow-lg text-xl font-semibold'>
-            <p>Your Score: {score}</p>
-          </button>
-          <button
-            onClick={handleStartOrPauseGame}
-            className='px-8 py-4 mx-2 rounded-md bg-red-400 shadow-lg text-xl font-semibold'
-          >
-            {snakeSpeed === MIN_SNAKE_SPEED ? 'Start' : 'Pause'}
-          </button>
+    <div className='w-1/2 p-5'>
+      <div className='flex flex-row justify-between my-2 mx-4'>
+        <div
+          className='px-4 py-3 leading-normal bg-green-300 rounded-md'
+          role='alert'
+        >
+          <p>Your Score: {score}</p>
         </div>
 
-        <div className='flex'>
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            type='text'
-            className='font-light rounded-md border focus:outline-none py-2 mt-2 px-1 mx-4 focus:ring-2 focus:border-none ring-green-300'
-            placeholder='Your Name...'
-          />
-
-          <input
-            value={company}
-            onChange={(e) => setCompany(e.target.value)}
-            type='text'
-            className='font-light rounded-md border focus:outline-none py-2 mt-2 px-1 mx-4 focus:ring-2 focus:border-none ring-green-300'
-            placeholder='Your Company...'
-          />
-        </div>
-
-        <ScoreTable scores={scores} />
+        <button
+          onClick={startGame}
+          className='px-4 py-3 leading-normal bg-red-300 rounded-md'
+          role='alert'
+        >
+          {gameOver ? 'Play Again' : 'Start Game'}
+        </button>
       </div>
 
-      <div className='w-1/2'>
-        {board.map((row, i) => (
-          <div key={i} className='row'>
-            {row.map((cellValue, i) => {
-              const className = getCellClassName(
-                cellValue,
-                foodCell,
-                snakeCells
-              )
-              return <div key={i} className={className}></div>
-            })}
-          </div>
-        ))}
+      <div className='flex justify-center'>
+        <canvas
+          style={{ border: '1px solid black' }}
+          ref={canvasRef}
+          width={`${CANVAS_SIZE[0]}px`}
+          height={`${CANVAS_SIZE[1]}px`}
+        />
       </div>
     </div>
   )
