@@ -24,8 +24,8 @@ const userData = {
     },
     {
       title: 'Portfolio Webpage',
-      link: 'https://github.com/gregchlosta/cookify',
-      imgUrl: '/cookify.jpg',
+      link: 'https://github.com/gregchlosta/next-portfolio',
+      imgUrl: '/portfolio.jpg',
     },
   ],
   about: {
