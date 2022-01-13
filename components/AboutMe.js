@@ -4,61 +4,39 @@ import userData from '../constants/data'
 export default function AboutMe() {
   return (
     <section className='bg-white'>
-      <div className='max-w-6xl mx-auto h-48 bg-whit'>
-        <h1 className=' text-5xl md:text-9xl font-bold py-20 text-center md:text-left'>
+      <div className='max-w-6xl mx-auto h-48'>
+        <h1 className='text-gray-800 text-5xl md:text-9xl font-bold py-20 text-center md:text-left'>
           About Me.
         </h1>
       </div>
       <div className='bg-[#e7e7e7] -mt-10'>
-        <div className='text-container max-w-6xl mx-auto pt-20'>
+        <div className='text-container max-w-6xl mx-auto pt-10 md:pt-24'>
           <p
-            className='leading-loose text-2xl md:text-4xl font-semibold  mx-4'
+            className='leading-loose text-2xl md:text-4xl font-semibold mx-4'
             style={{ lineHeight: '3rem' }}
           >
-            {userData.about.title}. Currently working on{' '}
-            <a
-              className='bg-red-500 rounded-md px-2 py-1 text-white'
-              href={userData.about.currentProjectUrl}
-            >
-              {userData.about.currentProject} ✈️
-            </a>
+            {userData.about.title}
           </p>
         </div>
       </div>
-      <div className='bg-[#e7e7e7]  px-4'>
+      <div className='bg-[#e7e7e7] px-4'>
         <div className='pt-20 grid grid-cols-1 md:grid-cols-3 max-w-6xl mx-auto gap-y-20 gap-x-20'>
           {/* Social Buttons */}
           <div className='inline-flex flex-col'>
             <div>
               <h1 className='text-xl font-semibold text-gray-700'>Contact</h1>
               <p className='text-lg text-gray-500 mt-4'>
-                For any sort help / enquiry, shoot a{' '}
+                For any sort of help or enquiry, please shoot a{' '}
                 <a
                   href={`mailto:${userData.email}`}
                   className='text-gray-800 border-b-2 border-gray-800  font-bold'
                 >
-                  mail
+                  email
                 </a>{' '}
-                and I'll get back. I swear.
+                and I'll get back to you.
               </p>
             </div>
-            <div className='mt-8'>
-              <h1 className='text-xl font-semibold text-gray-700'>
-                Job Opportunities
-              </h1>
-              <p className='text-lg text-gray-500 mt-4'>
-                I'm looking for a job currently, If you see me as a good fit,
-                check my{' '}
-                <a
-                  href={userData.resumeUrl}
-                  target='__blank'
-                  className='text-gray-800 border-b-2 border-gray-800 font-bold'
-                >
-                  Resume / CV
-                </a>{' '}
-                and I'd love to work for you.
-              </p>
-            </div>
+
             {/* Social Links */}
             <h1 className='text-xl font-semibold text-gray-700 mt-8'>
               Social Links

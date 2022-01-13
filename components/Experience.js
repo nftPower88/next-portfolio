@@ -5,12 +5,12 @@ export default function Experience() {
   return (
     <section className='bg-white'>
       <div className='max-w-6xl mx-auto h-48 bg-white'>
-        <h1 className=' text-5xl md:text-9xl font-bold py-20 text-center md:text-left'>
+        <h1 className='text-gray-800 text-5xl md:text-9xl font-bold py-20 text-center md:text-left'>
           Experience
         </h1>
       </div>
-      <div className='bg-[#e7e7e7] -mt-4'>
-        <div className='grid grid-cols-1 max-w-xl mx-auto pt-20'>
+      <div className='bg-[#e7e7e7] -mt-10'>
+        <div className='grid grid-cols-1 max-w-xl mx-auto pt-14 md:pt-40'>
           {/* Experience card */}
           {userData.experience.map((exp, idx) => (
             <>
@@ -27,7 +27,7 @@ export default function Experience() {
                   <div className='w-4 h-4 bg-green-500 rounded-full relative z-10'>
                     <div className='w-4 h-4 bg-green-500 rounded-full relative z-10 animate-ping'></div>
                   </div>
-                  <div className='w-1 h-24 bg-gray-200 rounded-full -mt-2'></div>
+                  <div className='w-1 h-24 bg-gray-300 rounded-full -mt-2'></div>
                 </div>
               )}
             </>
@@ -41,7 +41,7 @@ export default function Experience() {
 const ExperienceCard = ({ title, desc, year, company, companyLink }) => {
   return (
     <div className='relative experience-card border p-4 rounded-md shadow-xl bg-white  z-10 mx-4'>
-      <h1 className='absolute -top-10 md:-left-10 md:-top-10 text-4xl text-gray-200 font-bold '>
+      <h1 className='absolute -top-10 md:-left-10 md:-top-10 text-4xl text-gray-400 font-bold '>
         {year}
       </h1>
       <h1 className='font-semibold text-xl'>{title}</h1>

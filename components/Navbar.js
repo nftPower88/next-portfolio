@@ -96,8 +96,8 @@ export default function Navbar() {
         <Link href='/projects'>
           <a className='text-base font-normal text-gray-600'>Projects</a>
         </Link>
-        <Link href='/contact'>
-          <a className='text-base font-normal text-gray-600'>Contact</a>
+        <Link href='/experience'>
+          <a className='text-base font-normal text-gray-600'>Experience</a>
         </Link>
       </div>
     </div>
