@@ -82,7 +82,7 @@ export default function Board() {
 
   useEffect(() => {
     window.addEventListener('keydown', (e) => {
-      e.preventDefault()
+      if (e.keyCode >= 37 && e.keyCode <= 40) e.preventDefault()
       moveSnake(e)
     })
   }, [])
