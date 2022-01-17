@@ -5,12 +5,12 @@ export default function AboutMe() {
   return (
     <section className='bg-white'>
       <div className='max-w-6xl mx-auto h-48'>
-        <h1 className='text-gray-800 text-5xl md:text-9xl font-bold py-20 text-center md:text-left'>
+        <h1 className='text-gray-800 text-6xl md:text-7xl lg:text-9xl font-bold px-5 py-10 lg:py-20 text-center md:text-left'>
           About Me.
         </h1>
       </div>
       <div className='bg-[#e7e7e7] -mt-10'>
-        <div className='text-container max-w-6xl mx-auto pt-10 md:pt-24'>
+        <div className='text-container max-w-6xl mx-auto pt-10 lg:pt-24'>
           <p
             className='leading-loose text-2xl md:text-4xl font-semibold mx-4'
             style={{ lineHeight: '3rem' }}
@@ -20,13 +20,13 @@ export default function AboutMe() {
         </div>
       </div>
       <div className='bg-[#e7e7e7] px-4'>
-        <div className='pt-20 grid grid-cols-1 md:grid-cols-3 max-w-6xl mx-auto gap-y-20 gap-x-20'>
+        <div className='pt-12 lg:pt-20 grid grid-cols-1 md:grid-cols-3 max-w-6xl mx-auto gap-y-10 gap-x-10 lg:gap-y-20 lg:gap-x-20'>
           {/* Social Buttons */}
           <div className='inline-flex flex-col'>
             <div>
               <h1 className='text-xl font-semibold text-gray-700'>Contact</h1>
               <p className='text-lg text-gray-500 mt-4'>
-                For any sort of help or enquiry, please shoot a{' '}
+                For any sort of help or enquiry, please send a{' '}
                 <a
                   href={`mailto:${userData.email}`}
                   className='text-gray-800 border-b-2 border-gray-800  font-bold'
@@ -76,7 +76,7 @@ export default function AboutMe() {
               </p>
             ))}
 
-            <h1 className='bg-red-500 text-3xl rounded-md px-2 py-1 inline-block font-bold text-gray-50'>
+            <h1 className='bg-red-500 mt-8 text-3xl rounded-md px-2 py-1 inline-block font-bold text-gray-50'>
               Tech Stack
             </h1>
             <div className='flex flex-row flex-wrap mt-8'>

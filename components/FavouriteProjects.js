@@ -3,9 +3,9 @@ import Link from 'next/link'
 
 export default function FavouriteProjects() {
   return (
-    <div className='bg-[#e7e7e7] lg:-mt-40'>
+    <div className='bg-[#e7e7e7] md:-mt-40'>
       <div className='max-w-6xl mx-auto'>
-        <header className='flex flex-col md:flex-row justify-between items-center lg:pt-40 mx-10 lg:my-0'>
+        <header className='flex flex-col md:flex-row justify-between items-center pt-10 md:pt-40 mx-10 md:my-0'>
           <h1 className='text-6xl lg:text-9xl max-w-lg font-bold text-gray-800 my-20 md:mb-12 md:mt-0 md:text-whit text-center'>
             Favourite Projects
           </h1>
@@ -32,7 +32,7 @@ export default function FavouriteProjects() {
         </header>
 
         {/* Grid starts here */}
-        <div className='grid md:grid-cols-3 gap-8 lg:-mt-7 pb-20 lg:pb-40'>
+        <div className='px-5 grid md:grid-cols-3 gap-8 lg:-mt-7 pb-12 lg:pb-40'>
           {/* Single card */}
           <a
             href='https://github.com/gregchlosta/cookify'
